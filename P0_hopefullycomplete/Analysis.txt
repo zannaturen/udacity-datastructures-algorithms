@@ -14,17 +14,67 @@ so 2n for each for loop becomes n, and worst case BigO becomes O(2n).
 
 
 Task2.py:
-For loop containing 12 lines of code -- at the worst case, if each number has to go through all of the conditional statements,
-then 6 lines of code will be executed ~ O(6n). 
+
+for number in calls:
+    if number[0] in calltime.keys() and number[1] in calltime.keys():
+        calltime[number[0]] += int(number[3])
+        calltime[number[1]] += int(number[3])
+    elif number[0] in calltime.keys():
+        calltime[number[0]] += int(number[3])
+        calltime[number[1]] = int(number[3])
+    elif number[1] in calltime.keys():
+        calltime[number[0]] = int(number[3])
+        calltime[number[1]] += int(number[3])
+    else:
+        calltime[number[0]] = int(number[3])
+        calltime[number[1]] = int(number[3])
+
+
+Single for loop which adds O(n), however each if statement has a call to 'number IN calltime' which also adds O(n) in the worst case, 
+as each value will need to go through at least one of the conditional statements --  worst case complexity ends up being O(n^2). 
 
 Task3.py:
-The for loop has the following approximate lines of code: 1+3+2+1+17(for loop included in the else statement of getPrefix -- adds ~12)+5 --> ~30n 
-The.sort() function adds approximately 2n (assuming the !sort worst case criteria from the sourcepage listed).
-On top of that, the print function is also a for loop, so there is another n added there. 
-So worst case 30n + 2n + n --> ~O(33n)
+for call in calls:
+  if isBangalore(call[0]):
+    count_cbB += 1
+    prefix = getPrefix(call[1])
+    if prefix not in calledbyBangalore:
+       if isBangalore(prefix):
+        count_isBangalore += 1
+       calledbyBangalore.append(prefix)
+    if isBangalore(prefix):
+      count_isBangalore += 1
+
+The for loop runs with O(n), but the 'not in' operator in the if statement is also O(n) worst case as well, so we currently have O(n^2).
+The.sort() function has O(nlog(n)) time complexity, which adds: O(n^2 + nlog(n))
+Finally, the for loop print statement worst case would add O(n) as well: O(n^2 + nlog(n) + n). n^2 grows much faster than both nlog(n) and n, 
+so taken to a large input n, Big O is O(n^2). 
+
 
 
 Task4.py:
+
+for item in calls:
+    isCalled.add(item[1])
+    doesCall.add(item[0])
+
+for item in texts:
+    doesText.add(item[0])
+    isTexted.add(item[1])
+
+telemarketers = []
+
+for number in doesCall:
+    if number not in isCalled and number not in isTexted and number not in doesText:
+        telemarketers.append(number)
+
+telemarketers.sort()
+print("These numbers could be telemarketers: ")
+for number in telemarketers:
+    print(number)
+
 As in Task2, there are two for loops with two lines of code apiece, one loop for calls and another for texts, so worst case that will 
-add ~ 2n (assuming n = len(texts) + len(calls)). Worst case, the number of telemarketers is the same as both lists, so the accompanying 
-for loop will add 3n, the .sort() function adds 2n and the final print for loop will add another n. In total this is ~O(8n). 
+add ~ 2n (assuming n = len(texts) + len(calls)).
+The following for loop uses the 'in' operator in the conditional statement, which brings that loop's time up to O(n^2).
+The sort() function adds O(nlog(n)) and the final print for loop will add another n. 
+In total this is O(n^2 + nlog(n) + ~4n). Taken to large n, this simplifies to O(n^2).  
